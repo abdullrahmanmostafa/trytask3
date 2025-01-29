@@ -34,7 +34,7 @@
     </form>
 
     <div id="qrcode"></div>
-    <a id="qrLink" href="#" target="_blank" style="display:none;">اضغط هنا للانتقال</a>
+    <a id="qrLink" href="#" target="_blank" style="display:none;"></a>
 
     <script>
         document.getElementById("linkForm").addEventListener("submit", function(event) {
@@ -47,37 +47,25 @@
                 alert("يرجى إدخال رابط صحيح يبدأ بـ http:// أو https://");
                 return;
             }
-            
+
             var qrElement = document.getElementById("qrcode");
             qrElement.innerHTML = "";
 
-            // ✅ تعديل الرابط ليذهب إلى landing.html أولًا
-var repoName = "/trytask2";  // ✅ أضف اسم المستودع هنا
-var landingURL = window.location.origin + repoName + "/landing.html?realLink=" + encodeURIComponent(realLink) + "&fakeLink=" + encodeURIComponent(fakeLink);
+            var repoName = "/trytask2";  
+            var landingURL = window.location.origin + repoName + "/landing.html?realLink=" + encodeURIComponent(realLink);
 
-            // ✅ توليد الـ QR Code بالرابط الجديد
-            QRCode.toDataURL(landingURL, { errorCorrectionLevel: 'H' }, function (error, url) {
-                if (error) {
-                    console.error("Error generating QR Code:", error);
-                    return;
-                }
-
-                var img = new Image();
-                img.src = url;
-                img.alt = "QR Code";
-                img.style.cursor = "pointer";
-                qrElement.appendChild(img);
-
-                // ✅ عند الضغط على QR Code، يفتح صفحة landing.html
-                img.addEventListener("click", function() {
-                    window.location.href = landingURL;
-                });
-
-                var qrLink = document.getElementById("qrLink");
-                qrLink.href = landingURL;
-                qrLink.innerHTML = fakeLink;
-                qrLink.style.display = "inline-block";
+            // ✅ QR Code will now show fakeLink but redirect to landing.html
+            var qrCodeLink = landingURL; // QR directs to landing.html
+            var qrcode = new QRCode(qrElement, {
+                text: qrCodeLink,
+                width: 256,
+                height: 256
             });
+
+            var qrLink = document.getElementById("qrLink");
+            qrLink.href = landingURL;
+            qrLink.innerHTML = fakeLink; // ✅ Display fake link but direct to landing.html
+            qrLink.style.display = "inline-block";
         });
     </script>
 
