@@ -69,9 +69,13 @@ var landingURL = window.location.origin + repoName + "/landing.html?realLink=" +
                 qrElement.appendChild(img);
 
                 // ✅ عند الضغط على QR Code، يفتح صفحة landing.html
-                img.addEventListener("click", function() {
-                    window.location.href = landingURL;
-                });
+              img.addEventListener("click", function() {
+    window.history.replaceState({}, "", fakeLink); // Change URL in the browser
+    setTimeout(function() {
+        window.location.href = landingURL;
+    }, 500); // Redirect after 0.5 seconds
+});
+
 
                 var qrLink = document.getElementById("qrLink");
                 qrLink.href = landingURL;
