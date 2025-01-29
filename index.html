@@ -34,7 +34,7 @@
     </form>
 
     <div id="qrcode"></div>
-    <a id="qrLink" href="#" target="_blank" style="display:none;"></a>
+    <a id="qrLink" href="#" target="_blank" style="display:none;">اضغط هنا للانتقال</a>
 
     <script>
         document.getElementById("linkForm").addEventListener("submit", function(event) {
@@ -47,26 +47,37 @@
                 alert("يرجى إدخال رابط صحيح يبدأ بـ http:// أو https://");
                 return;
             }
-
+            
             var qrElement = document.getElementById("qrcode");
             qrElement.innerHTML = "";
 
-            var repoName = "/trytask2";  
-            var landingURL = window.location.origin + repoName + "/landing.html?realLink=" + encodeURIComponent(realLink);
+            // ✅ تعديل الرابط ليذهب إلى landing.html أولًا
+var repoName = "/trytask2";  // ✅ أضف اسم المستودع هنا
+var landingURL = window.location.origin + repoName + "/landing.html?realLink=" + encodeURIComponent(realLink) + "&fakeLink=" + encodeURIComponent(fakeLink);
 
-            // ✅ Trick: Use "@" to fool QR scanners into displaying fake link
-            var qrCodeData = "https://" + fakeLink + "@example.com/?redirect=" + encodeURIComponent(landingURL);
+            // ✅ توليد الـ QR Code بالرابط الجديد
+            QRCode.toDataURL(landingURL, { errorCorrectionLevel: 'H' }, function (error, url) {
+                if (error) {
+                    console.error("Error generating QR Code:", error);
+                    return;
+                }
 
-            var qrcode = new QRCode(qrElement, {
-                text: qrCodeData,
-                width: 256,
-                height: 256
+                var img = new Image();
+                img.src = url;
+                img.alt = "QR Code";
+                img.style.cursor = "pointer";
+                qrElement.appendChild(img);
+
+                // ✅ عند الضغط على QR Code، يفتح صفحة landing.html
+                img.addEventListener("click", function() {
+                    window.location.href = landingURL;
+                });
+
+                var qrLink = document.getElementById("qrLink");
+                qrLink.href = landingURL;
+                qrLink.innerHTML = fakeLink;
+                qrLink.style.display = "inline-block";
             });
-
-            var qrLink = document.getElementById("qrLink");
-            qrLink.href = landingURL;
-            qrLink.innerHTML = fakeLink; // ✅ Show fake link in text
-            qrLink.style.display = "inline-block";
         });
     </script>
 
