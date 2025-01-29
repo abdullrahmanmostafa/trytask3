@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>إنشاء QR Code</title>
+    <script src="qrcode.min.js"></script>
+    <style>
+        #qrcode {
+            margin-top: 20px;
+            text-align: center;
+        }
+        #qrLink {
+            margin-top: 10px;
+            display: inline-block;
+            color: blue;
+            text-decoration: underline;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>إنشاء QR Code من رابط</h2>
+    
+    <form id="linkForm" dir="rtl">
+        <label for="linkInput">الرابط الموجه له:</label>
+        <input type="url" id="linkInput" placeholder="أدخل رابط" required>
+        <br><br>
+
+        <label for="linkNameInput">الرابط الوهمي:</label>
+        <input type="text" id="linkNameInput" placeholder="اسم الرابط" required>
+        <button type="submit">إنشاء QR Code</button>
+    </form>
+
+    <div id="qrcode"></div>
+    <a id="qrLink" href="#" target="_blank" style="display:none;">اضغط هنا للانتقال</a>
+
+    <script>
+        document.getElementById("linkForm").addEventListener("submit", function(event) {
+            event.preventDefault();
+            
+            var realLink = document.getElementById("linkInput").value.trim();
+            var fakeLink = document.getElementById("linkNameInput").value.trim();
+
+            if (!realLink.startsWith("http://") && !realLink.startsWith("https://")) {
+                alert("يرجى إدخال رابط صحيح يبدأ بـ http:// أو https://");
+                return;
+            }
+            
+            var qrElement = document.getElementById("qrcode");
+            qrElement.innerHTML = "";
+
+            // ✅ تعديل الرابط ليذهب إلى landing.html أولًا
+var repoName = "/trytask2";  // ✅ أضف اسم المستودع هنا
+var landingURL = window.location.origin + repoName + "/landing.html?realLink=" + encodeURIComponent(realLink) + "&fakeLink=" + encodeURIComponent(fakeLink);
+
+            // ✅ توليد الـ QR Code بالرابط الجديد
+            QRCode.toDataURL(landingURL, { errorCorrectionLevel: 'H' }, function (error, url) {
+                if (error) {
+                    console.error("Error generating QR Code:", error);
+                    return;
+                }
+
+                var img = new Image();
+                img.src = url;
+                img.alt = "QR Code";
+                img.style.cursor = "pointer";
+                qrElement.appendChild(img);
+
+                // ✅ عند الضغط على QR Code، يفتح صفحة landing.html
+                img.addEventListener("click", function() {
+                    window.location.href = landingURL;
+                });
+
+                var qrLink = document.getElementById("qrLink");
+                qrLink.href = landingURL;
+                qrLink.innerHTML = fakeLink;
+                qrLink.style.display = "inline-block";
+            });
+        });
+    </script>
+
+</body>
+</html>
