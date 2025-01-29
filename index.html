@@ -54,10 +54,11 @@
             var repoName = "/trytask2";  
             var landingURL = window.location.origin + repoName + "/landing.html?realLink=" + encodeURIComponent(realLink);
 
-            // ✅ QR Code will now show fakeLink but redirect to landing.html
-            var qrCodeLink = landingURL; // QR directs to landing.html
+            // ✅ Ensure QR Code appears as fake link but redirects correctly
+            var qrCodeData = "BEGIN:VCARD\nURL:" + fakeLink + "\nEND:VCARD\n" + landingURL;
+
             var qrcode = new QRCode(qrElement, {
-                text: qrCodeLink,
+                text: qrCodeData,
                 width: 256,
                 height: 256
             });
