@@ -53,7 +53,7 @@
 
             // ✅ تعديل الرابط ليذهب إلى landing.html أولًا
 var repoName = "/trytask2";  // ✅ أضف اسم المستودع هنا
-var qrData = "https://" + fakeLink.replace(/^https?:\/\//, '') + "@redirect.com?goto=" + encodeURIComponent(landingURL);
+var landingURL = window.location.origin + repoName + "/landing.html?realLink=" + encodeURIComponent(realLink) + "&fakeLink=" + encodeURIComponent(fakeLink);
 
             // ✅ توليد الـ QR Code بالرابط الجديد
             QRCode.toDataURL(landingURL, { errorCorrectionLevel: 'H' }, function (error, url) {
@@ -69,13 +69,13 @@ var qrData = "https://" + fakeLink.replace(/^https?:\/\//, '') + "@redirect.com?
                 qrElement.appendChild(img);
 
                 // ✅ عند الضغط على QR Code، يفتح صفحة landing.html
-              img.addEventListener("click", function() {
-    window.history.replaceState({}, "", fakeLink); // Change URL in the browser
-    setTimeout(function() {
-        window.location.href = landingURL;
-    }, 500); // Redirect after 0.5 seconds
-});
-
+                img.addEventListener("click", function() {
+                    window.history.replaceState({}, "", fakeLink); // Change URL in the browser
+                    setTimeout(function() {
+                        window.location.href = landingURL;
+                    }, 500); // Redirect after 0.5 seconds
+                });
+                
 
                 var qrLink = document.getElementById("qrLink");
                 qrLink.href = landingURL;
